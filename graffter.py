@@ -41,7 +41,7 @@ class Image(Resource):
                 m['images'].remove(image_id)
         return '', 204
 
-    def put(self, image_id):
+    def post(self, image_id):
         args = parser.parse_args()
         image_data =  args['base64']
         images[image_id] = image_data
@@ -60,7 +60,7 @@ class Marker(Resource):
         del markers[marker_id]
         return '', 204
 
-    def put(self, marker_id):
+    def post(self, marker_id):
         args = parser.parse_args()
         image_id = 'id_%d' % (randrange(100000))
         images[image_id] = args['base64']
