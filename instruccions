@@ -19,5 +19,5 @@ curl http://localhost:5000/images/image_id
 #delete image
 curl http://localhost:5000/images/image_id -X DELETE -v
 
-#create new image in image
+#create or update image with image_id
 curl http://localhost:5000/images/image_id -d "base64=DATOS" -X PUT -v
