@@ -8,7 +8,7 @@ curl http://localhost:5000/markers/marker_id
 curl http://localhost:5000/markers/delete/marker_id -X POST -v
 
 #create new image in marker. If marker does not exist, it creats it
-curl http://localhost:5000/markers/marker_id -d "base64=DATOS" -X PUT -v
+curl http://localhost:5000/markers/marker_id -d "base64=DATOS" -X POST -v
 
 #get images ids
 curl http://localhost:5000/images
@@ -20,4 +20,4 @@ curl http://localhost:5000/images/image_id
 curl http://localhost:5000/images/delete/image_id -X POST -v
 
 #create or update image with image_id
-curl http://localhost:5000/images/image_id -d "base64=DATOS" -X PUT -v
+curl http://localhost:5000/images/image_id -d "base64=DATOS" -X POST -v
