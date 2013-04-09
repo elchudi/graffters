@@ -47,18 +47,19 @@ class Image(Resource):
         images[image_id] = image_data
         return image_id, 201
 
+class ImageDelete(Resource):
+    def post(self, image_id):
+        abort_if_image_doesnt_exist(image_id)
+        del images[image_id]
+        for m in markers:
+            if image_id in m['images']:
+                m['images'].remove(image_id)
+        return '', 204
 
 class Marker(Resource):
     def get(self, marker_id):
         abort_if_marker_doesnt_exist(marker_id)
         return markers[marker_id]
-
-    def delete(self, marker_id):
-        abort_if_marker_doesnt_exist(marker_id)
-        for image_id in markers[marker_id]['images']:
-            del images[image_id] 
-        del markers[marker_id]
-        return '', 204
 
     def post(self, marker_id):
         args = parser.parse_args()
@@ -68,6 +69,14 @@ class Marker(Resource):
             markers[marker_id] = {'images':[]}
         markers[marker_id]['images'].append(image_id)
         return image_id, 201
+
+class MarkerDelete(Resource):
+    def post(self, marker_id):
+        abort_if_marker_doesnt_exist(marker_id)
+        for image_id in markers[marker_id]['images']:
+            del images[image_id] 
+        del markers[marker_id]
+        return '', 204
 
 class MarkerList(Resource):
     def get(self):
@@ -79,8 +88,10 @@ class ImageList(Resource):
 
 api.add_resource(ImageList, '/images')
 api.add_resource(Image, '/images/<string:image_id>')
+api.add_resource(ImageDelete, '/images/delete/<string:image_id>')
 api.add_resource(MarkerList, '/markers')
 api.add_resource(Marker, '/markers/<string:marker_id>')
+api.add_resource(MarkerDelete, '/markers/delete/<string:marker_id>')
 
 
 if __name__ == '__main__':
