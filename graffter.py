@@ -1,3 +1,4 @@
+import base64
 from flask import Flask, request
 from flask.ext.restful import reqparse, abort, Api, Resource
 from random import randrange
@@ -19,6 +20,14 @@ images = {
     'id_3':'C',
 }
 
+
+def save_png(png_b64text, filename):
+    pngraw = base64.decodestring(png_b64text)
+
+    f = open('./static/' + filename, 'w')
+    f.write(pngraw)
+    f.close()   
+    
 
 def abort_if_image_doesnt_exist(image_id):
     if image_id not in images:
@@ -45,6 +54,7 @@ class Image(Resource):
         args = parser.parse_args()
         image_data =  args['base64']
         images[image_id] = image_data
+        save_png(images[image_id], image_id)
         return image_id, 201
 
 class ImageDelete(Resource):
@@ -68,6 +78,7 @@ class Marker(Resource):
         if marker_id not in markers.keys():
             markers[marker_id] = {'images':[]}
         markers[marker_id]['images'].append(image_id)
+        save_png(images[image_id], image_id)
         return image_id, 201
 
 class MarkerDelete(Resource):
@@ -95,4 +106,4 @@ api.add_resource(MarkerDelete, '/markers/delete/<string:marker_id>')
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', port=6000, debug=True)
